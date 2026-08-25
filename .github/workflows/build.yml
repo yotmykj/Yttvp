@@ -12,7 +12,6 @@ permissions:
 
 jobs:
   build:
-    name: Gradle Build
     runs-on: ubuntu-latest
 
     steps:
@@ -28,31 +27,34 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v6
 
-      - name: Check Gradle Wrapper
+      - name: Fix Gradle Wrapper permissions
+        run: chmod +x gradlew
+
+      - name: Check Gradle
         run: ./gradlew --version
 
       - name: Run tests
         run: ./gradlew test --stacktrace
 
-      - name: Build project
+      - name: Build
         run: ./gradlew build --stacktrace
 
-      - name: Upload build artifacts
+      - name: Upload artifacts
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: YTTV-Patcher-build
+          name: YTTV-Patcher
           path: |
             **/build/libs/*
             **/build/distributions/*
           if-no-files-found: warn
 
-      - name: Upload test reports
+      - name: Upload reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-reports
+          name: build-reports
           path: |
-            **/build/reports/tests/**
+            **/build/reports/**
             **/build/test-results/**
           if-no-files-found: ignore
