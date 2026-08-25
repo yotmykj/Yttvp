@@ -2,8 +2,7 @@ name: Build YTTV-Patcher
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
   workflow_dispatch:
 
@@ -26,11 +25,16 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v6
+        with:
+          gradle-version: '8.5'
 
-      - name: Fix Gradle Wrapper permissions
+      - name: Generate clean Gradle Wrapper
+        run: gradle wrapper --gradle-version 8.5
+
+      - name: Make wrapper executable
         run: chmod +x gradlew
 
-      - name: Check Gradle
+      - name: Verify Gradle
         run: ./gradlew --version
 
       - name: Run tests
@@ -39,22 +43,12 @@ jobs:
       - name: Build
         run: ./gradlew build --stacktrace
 
-      - name: Upload artifacts
+      - name: Upload build artifacts
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: YTTV-Patcher
+          name: YTTV-Patcher-build
           path: |
             **/build/libs/*
             **/build/distributions/*
           if-no-files-found: warn
-
-      - name: Upload reports
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-reports
-          path: |
-            **/build/reports/**
-            **/build/test-results/**
-          if-no-files-found: ignore
