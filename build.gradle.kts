@@ -1,31 +1,29 @@
 plugins {
-    kotlin("jvm") version "1.9.23" apply false
+    kotlin("jvm") version "2.0.21" apply false
 }
 
 allprojects {
-    group = "com.yttv.patcher"
-    version = "0.1.0"
-
-    repositories {
-        mavenCentral()
-        google()
-    }
+    group = "com.yotmykj.yttvp"
+    version = "1.0.0"
 }
 
 subprojects {
     apply(plugin = "org.jetbrains.kotlin.jvm")
 
-    dependencies {
-        "testImplementation"(kotlin("test"))
-        "testImplementation"("org.junit.jupiter:junit-jupiter:5.10.2")
-        "testRuntimeOnly"("org.junit.platform:junit-platform-launcher")
+    repositories {
+        mavenCentral()
     }
 
-    tasks.test {
+    tasks.withType<Test>().configureEach {
         useJUnitPlatform()
     }
 
     kotlin {
         jvmToolchain(17)
+    }
+
+    dependencies {
+        "testImplementation"("org.jetbrains.kotlin:kotlin-test:2.0.21")
+        "testImplementation"("org.junit.jupiter:junit-jupiter:5.11.0")
     }
 }
