@@ -5,25 +5,25 @@ plugins {
 allprojects {
     group = "com.yotmykj.yttvp"
     version = "1.0.0"
-}
-
-subprojects {
-    apply(plugin = "org.jetbrains.kotlin.jvm")
 
     repositories {
         mavenCentral()
     }
+}
 
-    tasks.withType<Test>().configureEach {
-        useJUnitPlatform()
-    }
+subprojects {
+    plugins.withId("org.jetbrains.kotlin.jvm") {
+        extensions.configure<org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension> {
+            jvmToolchain(17)
+        }
 
-    kotlin {
-        jvmToolchain(17)
-    }
+        tasks.withType<Test>().configureEach {
+            useJUnitPlatform()
+        }
 
-    dependencies {
-        "testImplementation"("org.jetbrains.kotlin:kotlin-test:2.0.21")
-        "testImplementation"("org.junit.jupiter:junit-jupiter:5.11.0")
+        dependencies {
+            add("testImplementation", "org.jetbrains.kotlin:kotlin-test:2.0.21")
+            add("testImplementation", "org.junit.jupiter:junit-jupiter:5.11.0")
+        }
     }
 }
